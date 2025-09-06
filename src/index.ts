@@ -59,7 +59,7 @@ export type RulerContext<R, P, E> = {
   shouldToUpperCase: boolean
 } & E
 
-export function rulerFactory<R, P = R, E extends Record<string, (...args: any[]) => any> = {}>(
+export function rulerFactory<R, E extends Record<string, (...args: any[]) => any>, P = R>(
   generator: RulerFactoryGenerator<R, P>,
   extend?: (ctx: RulerContext<R, P, {}>) => E,
 ) {
