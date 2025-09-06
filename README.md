@@ -218,3 +218,8 @@ MIT
 
 - [GitHub Repository](https://github.com/varletjs/ruler-factory)
 - [Issues](https://github.com/varletjs/ruler-factory/issues)
+
+## Inspired By
+
+[`zod`](https://zod.dev/)
+[`yup`](https://github.com/jquense/yup)
