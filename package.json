@@ -49,6 +49,7 @@
     "test": "vitest run --coverage"
   },
   "simple-git-hooks": {
+    "pre-commit": "pnpm exec nano-staged --allow-empty",
     "commit-msg": "pnpm exec vr commit-lint -p $1"
   },
   "nano-staged": {
