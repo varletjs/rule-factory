@@ -210,7 +210,7 @@ function customRuler() {
 - `.array().length(value, message, params?)`
 - `.array().includes(value, message, params?)`
 
-### Custom Validation
+### Predicate Validation
 
 - `.is(fn, message, params?)`
 - `.not(fn, message, params?)`
