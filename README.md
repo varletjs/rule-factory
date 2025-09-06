@@ -143,7 +143,7 @@ const model = ref({
 </template>
 ```
 
-### Custom API
+### Extend API
 
 Take `Naive UI` as an example
 
@@ -151,32 +151,33 @@ Take `Naive UI` as an example
 import { FormItemRule } from 'naive-ui'
 import { rulerFactory, RulerFactoryMessage } from 'ruler-factory'
 
+interface RulerExtendedContext {
+  ip(message: RulerFactoryMessage, params?: FormItemRule): RulerContext<FormItemRule, FormItemRule, this>
+}
+
 customRuler().ip('ip format error').done()
 
-function customRuler() {
-  const ruler = rulerFactory<FormItemRule>((validator, params = {}) => ({
+const ruler = rulerFactory<FormItemRule, FormItemRule, RulerExtendedContext>(
+  (validator, params = {}) => ({
     trigger: ['blur', 'change', 'input'],
     validator: (_, value) => validator(value),
     ...params,
-  }))
+  }),
+  (ctx) => {
+    function ip(message: RulerFactoryMessage, params?: FormItemRule) {
+      ctx.addRule((value) => {
+        // Implement isString and isIP by yourself
+        if (!isString(value) || !isIP(value)) {
+          return new Error(ctx.getMessage(message))
+        }
+      }, params)
 
-  const ctx = ruler()
+      return ctx
+    }
 
-  function ip(message: RulerFactoryMessage, params?: FormItemRule) {
-    ctx.addRule((value) => {
-      // Implement isString and isIP by yourself
-      if (!isString(value) || !isIP(value)) {
-        return new Error(ctx.getMessage(message))
-      }
-    }, params)
-
-    return ctx
-  }
-
-  Object.assign(ctx, { ip })
-
-  return ctx as typeof ctx & { ip: typeof ip }
-}
+    return { ip }
+  },
+)
 ```
 
 ## API
