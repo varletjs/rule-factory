@@ -59,8 +59,8 @@ const model = ref({
 
 <template>
   <var-form>
-    <var-input v-model="model.name" placeholder="Name" />
-    <var-input v-model="model.age" placeholder="Email" />
+    <var-input v-model="model.name" placeholder="Name" :rules="ruler().required('Cannot be empty').min(2, 'Wrong length')" />
+    <var-input v-model="model.age" placeholder="Email" :rules="ruler().email('Must be email format')" />
   </var-form>
 </template>
 ```
