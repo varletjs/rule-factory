@@ -1,6 +1,6 @@
 {
   "name": "ruler-factory",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "A flexible, chainable validation rule factory for typeScript/javaScript.",
   "keywords": [
     "validation",
