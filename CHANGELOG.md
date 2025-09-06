@@ -1,3 +1,9 @@
+## [0.0.8](https://github.com/varletjs/ruler-factory/compare/v0.0.7...v0.0.8) (2025-09-06)
+
+### Features
+
+- update rulerFactory function signature to allow default empty object for extensions ([ca5844f](https://github.com/varletjs/ruler-factory/commit/ca5844f7ea778ebe34214c240e966a62f9adbbcf))
+
 ## [0.0.7](https://github.com/varletjs/ruler-factory/compare/v0.0.6...v0.0.7) (2025-09-06)
 
 ### Features
