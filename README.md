@@ -58,10 +58,10 @@ const model = ref({
 </script>
 
 <template>
-<var-form>
-  <var-input v-model="model.name" placeholder="Name" />
-  <var-input v-model="model.age" placeholder="Email" />
-</var-form>
+  <var-form>
+    <var-input v-model="model.name" placeholder="Name" />
+    <var-input v-model="model.age" placeholder="Email" />
+  </var-form>
 </template>
 ```
 
@@ -85,14 +85,14 @@ const model = ref({
 </script>
 
 <template>
-<n-form :model>
-  <n-form-item path="name" label="Name" :rule="ruler().required('Cannot be empty').min(2, 'Wrong length')">
-    <n-input v-model:value="model.name" />
-  </n-form-item>
-  <n-form-item path="age" label="Age" :rule="ruler().number().required('Cannot be empty').min(0, 'Cannot be negative')">
-    <n-input-number v-model:value="model.age" />
-  </n-form-item>
-</n-form>
+  <n-form :model>
+    <n-form-item path="name" label="Name" :rule="ruler().required('Cannot be empty').min(2, 'Wrong length')">
+      <n-input v-model:value="model.name" />
+    </n-form-item>
+    <n-form-item path="age" label="Age" :rule="ruler().number().required('Cannot be empty').min(0, 'Cannot be negative')">
+      <n-input-number v-model:value="model.age" />
+    </n-form-item>
+  </n-form>
 </template>
 ```
 
@@ -101,8 +101,8 @@ const model = ref({
 Take `Naive UI` as an example
 
 ```ts
-import { rulerFactory, RulerFactoryMessage } from 'ruler-factory'
 import { FormItemRule } from 'naive-ui'
+import { rulerFactory, RulerFactoryMessage } from 'ruler-factory'
 
 function customRuler() {
   const ruler = rulerFactory<FormItemRule>((validator, params = {}) => ({
@@ -124,7 +124,7 @@ function customRuler() {
 
   Object.assign(ctx, { ip })
 
-  return ruler as typeof ctx & { ip: typeof ip; }
+  return ruler as typeof ctx & { ip: typeof ip }
 }
 ```
 
