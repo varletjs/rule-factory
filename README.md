@@ -120,6 +120,8 @@ Take `Naive UI` as an example
 import { FormItemRule } from 'naive-ui'
 import { rulerFactory, RulerFactoryMessage } from 'ruler-factory'
 
+customRuler().ip('ip format error').done()
+
 function customRuler() {
   const ruler = rulerFactory<FormItemRule>((validator, params = {}) => ({
     trigger: ['blur', 'change', 'input'],
@@ -127,20 +129,22 @@ function customRuler() {
     ...params,
   }))
 
+  const ctx = ruler()
+
   function ip(message: RulerFactoryMessage, params?: FormItemRule) {
-    ruler.addRule((value) => {
+    ctx.addRule((value) => {
       // Implement isString and isIP by yourself
       if (!isString(value) || !isIP(value)) {
-        return new Error(ruler.getMessage(message))
+        return new Error(ctx.getMessage(message))
       }
     }, params)
 
-    return ruler
+    return ctx
   }
 
   Object.assign(ctx, { ip })
 
-  return ruler as typeof ctx & { ip: typeof ip }
+  return ctx as typeof ctx & { ip: typeof ip }
 }
 ```
 
