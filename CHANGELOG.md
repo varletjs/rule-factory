@@ -1,3 +1,9 @@
+## [0.0.4](https://github.com/varletjs/ruler-factory/compare/v0.0.3...v0.0.4) (2025-09-06)
+
+### Features
+
+- enhance rulerFactory with extended context and validation methods; update README for clarity ([b121e49](https://github.com/varletjs/ruler-factory/commit/b121e49629c4e7541e16dc35eb354e50f9fb33a9))
+
 ## [0.0.3](https://github.com/varletjs/ruler-factory/compare/v0.0.2...v0.0.3) (2025-09-06)
 
 ### Bug Fixes
