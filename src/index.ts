@@ -61,7 +61,7 @@ export type RulerContext<R, P, E> = {
 
 export function rulerFactory<R, P = R, E extends Record<string, (...args: any[]) => any> = {}>(
   generator: RulerFactoryGenerator<R, P>,
-  extend?: (ctx: RulerContext<R, P, {}>) => E,
+  extend?: (ctx: RulerContext<R, P, E>) => E,
 ) {
   return function ruler(): RulerContext<R, P, E> {
     const rules: R[] = []
@@ -117,7 +117,7 @@ export function rulerFactory<R, P = R, E extends Record<string, (...args: any[])
       shouldToUpperCase: false,
     }
 
-    const extended = (extend?.(_ctx) ?? {}) as E
+    const extended = (extend?.(_ctx as RulerContext<R, P, E>) ?? {}) as E
 
     const ctx = { ..._ctx, ...extended } as RulerContext<R, P, E>
 
