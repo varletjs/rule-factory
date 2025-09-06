@@ -66,7 +66,7 @@ export function rulerFactory<R, P = R, E extends Record<string, any> = {}>(
   return function ruler(): RulerContext<R, P, E> {
     const rules: R[] = []
 
-    const _ctx: RulerContext<R, P, {}> = {
+    const ctx = {
       // helpers
       rules,
       addRule,
@@ -115,11 +115,9 @@ export function rulerFactory<R, P = R, E extends Record<string, any> = {}>(
       shouldToLowerCase: false,
       toUpperCase,
       shouldToUpperCase: false,
-    }
+    } as RulerContext<R, P, E>
 
-    const extended = (extend?.(_ctx as RulerContext<R, P, E>) ?? {}) as E
-
-    const ctx = { ..._ctx, ...extended } as RulerContext<R, P, E>
+    Object.assign(ctx, (extend?.(ctx) ?? {}) as E)
 
     function string(message?: RulerFactoryMessage, params?: P) {
       ctx.type = 'string'
