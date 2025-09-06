@@ -24,23 +24,22 @@ yarn add ruler-factory
 
 ### Varlet UI
 
-```html
+```vue
 <script setup lang="ts">
-  import { ref } from 'vue'
-  import { rulerFactory } from 'ruler-factory'
+import { ref } from 'vue'
+import { rulerFactory } from 'ruler-factory'
 
-  const ruler = rulerFactory((validator) => {
-    return (value) => {
-      const e = validator(value)
+const ruler = rulerFactory((validator) => {
+  return (value) => {
+    const e = validator(value)
+    return e ? e.message : true
+  }
+})
 
-      return e ? e.message : true
-    }
-  })
-
-  const model = ref({
-    name: '',
-    email: '',
-  })
+const model = ref({
+  name: '',
+  email: '',
+})
 </script>
 
 <template>
@@ -57,26 +56,26 @@ yarn add ruler-factory
 
 ### Vant
 
-```html
+```vue
 <script setup lang="ts">
-  import { ref } from 'vue'
-  import { rulerFactory } from 'ruler-factory'
-  import type { FieldRule } from 'vant'
+import { ref } from 'vue'
+import { rulerFactory } from 'ruler-factory'
+import type { FieldRule } from 'vant'
 
-  const ruler = rulerFactory<FieldRule>((validator, params) => ({
-    validator(value) {
-      const e = validator(value)
+const ruler = rulerFactory<FieldRule>((validator, params) => ({
+  validator(value) {
+    const e = validator(value)
 
-      return e ? e.message : true
-    },
-    trigger: ['onChange', 'onBlur', 'onSubmit'],
-    ...params,
-  }))
+    return e ? e.message : true
+  },
+  trigger: ['onChange', 'onBlur', 'onSubmit'],
+  ...params,
+}))
 
-  const model = ref({
-    name: '',
-    email: '',
-  })
+const model = ref({
+  name: '',
+  email: '',
+})
 </script>
 
 <template>
@@ -96,22 +95,22 @@ yarn add ruler-factory
 
 ### Naive UI
 
-```html
+```vue
 <script setup lang="ts">
-  import { ref } from 'vue'
-  import type { FormItemRule } from 'naive-ui'
-  import { rulerFactory } from 'ruler-factory'
+import { ref } from 'vue'
+import type { FormItemRule } from 'naive-ui'
+import { rulerFactory } from 'ruler-factory'
 
-  const ruler = rulerFactory<FormItemRule>((validator, params = {}) => ({
-    trigger: ['blur', 'change', 'input'],
-    validator: (_, value) => validator(value),
-    ...params,
-  }))
+const ruler = rulerFactory<FormItemRule>((validator, params = {}) => ({
+  trigger: ['blur', 'change', 'input'],
+  validator: (_, value) => validator(value),
+  ...params,
+}))
 
-  const model = ref({
-    name: '',
-    age: 20,
-  })
+const model = ref({
+  name: '',
+  age: 20,
+})
 </script>
 
 <template>
@@ -132,26 +131,26 @@ yarn add ruler-factory
 
 ### Element Plus
 
-```html
+```vue
 <script setup lang="ts">
-  import { ref } from 'vue'
-  import type { FormItemRule } from 'element-plus'
-  import { rulerFactory } from 'ruler-factory'
+import { ref } from 'vue'
+import type { FormItemRule } from 'element-plus'
+import { rulerFactory } from 'ruler-factory'
 
-  const ruler = rulerFactory<FormItemRule>((validator, params) => ({
-    validator(_, value, callback) {
-      const e = validator(value)
+const ruler = rulerFactory<FormItemRule>((validator, params) => ({
+  validator(_, value, callback) {
+    const e = validator(value)
 
-      e ? callback(e) : callback()
-    },
-    trigger: ['blur', 'change', 'input'],
-    ...params,
-  }))
+    e ? callback(e) : callback()
+  },
+  trigger: ['blur', 'change', 'input'],
+  ...params,
+}))
 
-  const model = ref({
-    name: '',
-    email: '',
-  })
+const model = ref({
+  name: '',
+  email: '',
+})
 </script>
 
 <template>
