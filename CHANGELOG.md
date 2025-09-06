@@ -1,3 +1,9 @@
+## [0.0.6](https://github.com/varletjs/ruler-factory/compare/v0.0.5...v0.0.6) (2025-09-06)
+
+### Features
+
+- refactor rulerFactory to improve type inference and extend context handling ([dff6fd5](https://github.com/varletjs/ruler-factory/commit/dff6fd57c891a9e3a99fa63beda15b29e6335852))
+
 ## [0.0.5](https://github.com/varletjs/ruler-factory/compare/v0.0.4...v0.0.5) (2025-09-06)
 
 ### Features
