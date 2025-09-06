@@ -26,13 +26,14 @@ yarn add ruler-factory
 
 ```vue
 <script setup lang="ts">
+import { ref } from 'vue'
 import { rulerFactory } from 'ruler-factory'
 
 const ruler = rulerFactory((validator) => {
   return (value) => {
     const e = validator(value)
 
-    return e instanceof Error ? e.message : true
+    return e ? e.message : true
   }
 })
 
@@ -47,7 +48,7 @@ const model = ref({
     <var-input
       v-model="model.name"
       placeholder="Name"
-      :rules="ruler().required('Cannot be empty').min(2, 'Wrong length').done()"
+      :rules="ruler().required('Required').min(2, 'Wrong length').done()"
     />
     <var-input
       v-model="model.age"
@@ -62,8 +63,9 @@ const model = ref({
 
 ```vue
 <script setup lang="ts">
+import { ref } from 'vue'
 import { rulerFactory } from 'ruler-factory'
-import { FormItemRule } from 'naive-ui'
+import type { FormItemRule } from 'naive-ui'
 
 const ruler = rulerFactory<FormItemRule>((validator, params = {}) => ({
   trigger: ['blur', 'change', 'input'],
@@ -82,18 +84,62 @@ const model = ref({
     <n-form-item
       path="name"
       label="Name"
-      :rule="ruler().required('Cannot be empty').min(2, 'Wrong length').done()"
+      :rule="ruler().required('Required').min(2, 'Wrong length').done()"
     >
       <n-input v-model:value="model.name" />
     </n-form-item>
     <n-form-item
       path="age"
       label="Age"
-      :rule="ruler().number().required('Cannot be empty').min(0, 'Cannot be negative').done()"
+      :rule="ruler().number().required('Required').negative('Must be negative').done()"
     >
       <n-input-number v-model:value="model.age" />
     </n-form-item>
   </n-form>
+</template>
+```
+
+### Element Plus
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { rulerFactory } from 'ruler-factory'
+import type { FormItemRule } from 'element-plus'
+
+const ruler = rulerFactory<FormItemRule>((validator, params) => ({
+  validator(_, value, callback) {
+    const e = validator(value)
+
+    e ? callback(e) : callback()
+  },
+  trigger: ['blur', 'change', 'input'],
+  ...params,
+}))
+
+const model = ref({
+  name: '',
+  email: '',
+})
+</script>
+
+<template>
+  <el-form :model>
+    <el-form-item
+      prop="name"
+      label="Name"
+      :rules="ruler().required('Required').done()"
+    >
+      <el-input v-model="model.name" />
+    </el-form-item>
+    <el-form-item
+      prop="email"
+      label="Email"
+      :rules="ruler().email('Must be email format').done()"
+    >
+      <el-input v-model="model.email" />
+    </el-form-item>
+  </el-form>
 </template>
 ```
 
