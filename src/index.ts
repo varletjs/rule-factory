@@ -1,0 +1,554 @@
+import { isArray, isBoolean, isEmpty, isFunction, isNumber, isPlainObject, isString, isSymbol } from 'rattail'
+
+export type RulerFactoryMessage = string | (() => string)
+
+const EMAIL_REGEX = /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\\.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9\\-]*\.)+[a-z]{2,}$/i
+
+export type RulerFactoryValidator = (value: any) => undefined | Error
+
+export type RulerFactoryGenerator<R, P> = (validator: RulerFactoryValidator, params?: P) => R
+
+export function rulerFactory<R, P = R>(generator: RulerFactoryGenerator<R, P>) {
+  return function ruler() {
+    const rules: R[] = []
+
+    const ctx = {
+      // helpers
+      rules,
+      addRule,
+      generator,
+      getMessage,
+      // type
+      type: 'string',
+      string,
+      number,
+      array,
+      boolean,
+      object,
+      symbol,
+      bigint,
+      null: _null,
+      undefined: _undefined,
+      true: _true,
+      false: _false,
+      // validation
+      length,
+      min,
+      max,
+      regex,
+      required,
+      startsWith,
+      endsWith,
+      includes,
+      uppercase,
+      lowercase,
+      email,
+      gt,
+      gte,
+      lt,
+      lte,
+      positive,
+      negative,
+      is,
+      not,
+      done,
+      // transform
+      transformer,
+      transform,
+      trim,
+      shouldTrim: false,
+      toLowerCase,
+      shouldToLowerCase: false,
+      toUpperCase,
+      shouldToUpperCase: false,
+    }
+
+    function string(message?: RulerFactoryMessage, params?: P) {
+      ctx.type = 'string'
+
+      addRule((value: any) => {
+        if (message == null) {
+          return
+        }
+
+        if (!isString(value)) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function number(message?: RulerFactoryMessage, params?: P) {
+      ctx.type = 'number'
+
+      addRule((value) => {
+        if (message == null) {
+          return
+        }
+
+        if (!isNumber(value)) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function object(message?: RulerFactoryMessage, params?: P) {
+      ctx.type = 'object'
+
+      addRule((value) => {
+        if (message == null) {
+          return
+        }
+
+        if (!isPlainObject(value)) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function array(message?: RulerFactoryMessage, params?: P) {
+      ctx.type = 'array'
+
+      addRule((value) => {
+        if (message == null) {
+          return
+        }
+
+        if (!isArray(value)) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function boolean(message?: RulerFactoryMessage, params?: P) {
+      ctx.type = 'boolean'
+
+      addRule((value) => {
+        if (message == null) {
+          return
+        }
+
+        if (!isBoolean(value)) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function _true(message?: RulerFactoryMessage, params?: P) {
+      ctx.type = 'boolean'
+
+      addRule((value) => {
+        if (message == null) {
+          return
+        }
+
+        if (value !== true) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function _false(message?: RulerFactoryMessage, params?: P) {
+      ctx.type = 'boolean'
+
+      addRule((value) => {
+        if (message == null) {
+          return
+        }
+
+        if (value !== false) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function symbol(message?: RulerFactoryMessage, params?: P) {
+      ctx.type = 'symbol'
+
+      addRule((value) => {
+        if (message == null) {
+          return
+        }
+
+        if (!isSymbol(value)) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function _null(message?: RulerFactoryMessage, params?: P) {
+      ctx.type = 'null'
+
+      addRule((value) => {
+        if (message == null) {
+          return
+        }
+
+        if (value !== null) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function _undefined(message?: RulerFactoryMessage, params?: P) {
+      ctx.type = 'undefined'
+
+      addRule((value) => {
+        if (message == null) {
+          return
+        }
+
+        if (value !== undefined) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function bigint(message?: RulerFactoryMessage, params?: P) {
+      ctx.type = 'bigint'
+
+      addRule((value) => {
+        if (message == null) {
+          return
+        }
+
+        if (typeof value !== 'bigint') {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function required(message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (isEmpty(value)) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function email(message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (ctx.type === 'string' && (!isString(value) || !EMAIL_REGEX.test(value))) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function min(v: number | bigint, message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (ctx.type === 'string' && (!isString(value) || value.length < v)) {
+          return new Error(getMessage(message))
+        }
+
+        if (ctx.type === 'number' || ctx.type === 'bigint') {
+          if (!isNumber(value) && typeof value !== 'bigint') {
+            return new Error(getMessage(message))
+          }
+
+          if (value < v) {
+            return new Error(getMessage(message))
+          }
+        }
+
+        if (ctx.type === 'array' && (!isArray(value) || value.length < v)) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function max(v: number | bigint, message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (ctx.type === 'string' && (!isString(value) || value.length > v)) {
+          return new Error(getMessage(message))
+        }
+
+        if (ctx.type === 'number' || ctx.type === 'bigint') {
+          if (!isNumber(value) && typeof value !== 'bigint') {
+            return new Error(getMessage(message))
+          }
+
+          if (value > v) {
+            return new Error(getMessage(message))
+          }
+        }
+
+        if (ctx.type === 'array' && (!isArray(value) || value.length > v)) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function length(v: number, message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (ctx.type === 'string' && (!isString(value) || value.length !== v)) {
+          return new Error(getMessage(message))
+        }
+
+        if (ctx.type === 'array' && (!isArray(value) || value.length !== v)) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function regex(v: RegExp, message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (ctx.type === 'string' && (!isString(value) || !v.test(value))) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function startsWith(v: string, message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (ctx.type === 'string' && (!isString(value) || !value.startsWith(v))) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function endsWith(v: string, message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (ctx.type === 'string' && (!isString(value) || !value.endsWith(v))) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function includes(v: string, message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (ctx.type === 'string' && (!isString(value) || !value.includes(v))) {
+          return new Error(getMessage(message))
+        }
+
+        if (ctx.type === 'array' && (!isArray(value) || !value.includes(v))) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function uppercase(message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (ctx.type === 'string' && (!isString(value) || value !== value.toUpperCase())) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function lowercase(message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (ctx.type === 'string' && (!isString(value) || value !== value.toLowerCase())) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function gt(v: number | bigint, message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (ctx.type === 'number' || ctx.type === 'bigint') {
+          if (!isNumber(value) && typeof value !== 'bigint') {
+            return new Error(getMessage(message))
+          }
+
+          if (value <= v) {
+            return new Error(getMessage(message))
+          }
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function gte(v: number | bigint, message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (ctx.type === 'number' || ctx.type === 'bigint') {
+          if (!isNumber(value) && typeof value !== 'bigint') {
+            return new Error(getMessage(message))
+          }
+
+          if (value < v) {
+            return new Error(getMessage(message))
+          }
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function lt(v: number | bigint, message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (ctx.type === 'number' || ctx.type === 'bigint') {
+          if (!isNumber(value) && typeof value !== 'bigint') {
+            return new Error(getMessage(message))
+          }
+
+          if (value >= v) {
+            return new Error(getMessage(message))
+          }
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function lte(v: number | bigint, message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (ctx.type === 'number' || ctx.type === 'bigint') {
+          if (!isNumber(value) && typeof value !== 'bigint') {
+            return new Error(getMessage(message))
+          }
+
+          if (value > v) {
+            return new Error(getMessage(message))
+          }
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function positive(message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (ctx.type === 'number' || ctx.type === 'bigint') {
+          if (!isNumber(value) && typeof value !== 'bigint') {
+            return new Error(getMessage(message))
+          }
+
+          if (value <= 0) {
+            return new Error(getMessage(message))
+          }
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function negative(message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (ctx.type === 'number' || ctx.type === 'bigint') {
+          if (!isNumber(value) && typeof value !== 'bigint') {
+            return new Error(getMessage(message))
+          }
+
+          if (value >= 0) {
+            return new Error(getMessage(message))
+          }
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function is(v: (value: any) => boolean, message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (!v(value)) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function not(v: (value: any) => boolean, message: RulerFactoryMessage, params?: P) {
+      addRule((value) => {
+        if (v(value)) {
+          return new Error(getMessage(message))
+        }
+      }, params)
+
+      return ctx
+    }
+
+    function trim() {
+      ctx.shouldTrim = true
+      return ctx
+    }
+
+    function toLowerCase() {
+      ctx.shouldToLowerCase = true
+      return ctx
+    }
+
+    function toUpperCase() {
+      ctx.shouldToUpperCase = true
+      return ctx
+    }
+
+    function transformer(value: any) {
+      if (ctx.type === 'string' && isString(value)) {
+        ctx.shouldTrim && (value = value.trim())
+        ctx.shouldToLowerCase && (value = value.toLowerCase())
+        ctx.shouldToUpperCase && (value = value.toUpperCase())
+      }
+
+      return value
+    }
+
+    function transform(v: (value: any) => any) {
+      ctx.transformer = v
+    }
+
+    function addRule(validator: RulerFactoryValidator, params?: P) {
+      rules.push(
+        generator((value) => {
+          value = ctx.transformer(value)
+
+          return validator(value)
+        }, params),
+      )
+      return ctx
+    }
+
+    function done() {
+      return rules
+    }
+
+    function getMessage(message: RulerFactoryMessage) {
+      return isFunction(message) ? message() : message
+    }
+
+    return ctx
+  }
+}

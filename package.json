@@ -1,0 +1,84 @@
+{
+  "name": "ruler-factory",
+  "version": "0.0.0",
+  "description": "A flexible, chainable validation rule factory for typeScript/javaScript.",
+  "keywords": [
+    "validation",
+    "validator",
+    "rules",
+    "factory",
+    "typescript",
+    "javascript",
+    "chainable",
+    "form",
+    "data"
+  ],
+  "bugs": {
+    "url": "https://github.com/varletjs/ruler-factory/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/varletjs/ruler-factory.git"
+  },
+  "license": "MIT",
+  "author": "haoziqaq <357229046@qq.com>",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
+    }
+  },
+  "main": "lib/index.cjs",
+  "jsdelivr": "lib/index.global.js",
+  "unpkg": "lib/index.global.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs,iife --out-dir=lib --global-name=RulerFactory --dts --clean",
+    "clean": "rimraf node_modules lib",
+    "dev": "vitest --coverage",
+    "format": "prettier --write .",
+    "lint": "eslint --fix .",
+    "prepare": "simple-git-hooks",
+    "release": "pnpm build && vr release",
+    "test": "vitest run --coverage"
+  },
+  "simple-git-hooks": {
+    "commit-msg": "pnpm exec vr commit-lint -p $1"
+  },
+  "nano-staged": {
+    "*.{md}": "prettier --write",
+    "*.{ts}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  },
+  "dependencies": {
+    "rattail": "^1.0.23"
+  },
+  "devDependencies": {
+    "@configurajs/eslint": "^0.0.14",
+    "@configurajs/prettier": "^0.1.1",
+    "@types/node": "^22.8.1",
+    "@varlet/release": "^0.3.1",
+    "@vitest/coverage-istanbul": "^2.1.3",
+    "eslint": "9.17.0",
+    "jsdom": "^25.0.1",
+    "nano-staged": "0.8.0",
+    "prettier": "^3.1.0",
+    "rimraf": "^6.0.1",
+    "simple-git-hooks": "^2.11.1",
+    "tsup": "8.3.5",
+    "typescript": "5.3.3",
+    "vitest": "^2.1.3"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "pnpm": ">=9.0"
+  }
+}
