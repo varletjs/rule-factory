@@ -59,11 +59,14 @@ export type RulerContext<R, P, E> = {
   shouldToUpperCase: boolean
 } & E
 
-export function rulerFactory<R, P = R, E extends Record<string, (...args: any[]) => any> = {}>(
-  generator: RulerFactoryGenerator<R, P>,
-  extend?: (ctx: RulerContext<R, P, {}>) => E,
-) {
-  return function ruler(): RulerContext<R, P, E> {
+export function rulerFactory<
+  R,
+  P = R,
+  E extends (ctx: RulerContext<R, P, {}>) => Record<string, (...args: any[]) => any> = (
+    ctx: RulerContext<R, P, {}>,
+  ) => Record<string, (...args: any[]) => any>,
+>(generator: RulerFactoryGenerator<R, P>, extend?: E) {
+  return function ruler(): RulerContext<R, P, ReturnType<E>> {
     const rules: R[] = []
 
     const _ctx: RulerContext<R, P, {}> = {
@@ -117,9 +120,9 @@ export function rulerFactory<R, P = R, E extends Record<string, (...args: any[])
       shouldToUpperCase: false,
     }
 
-    const extended = (extend?.(_ctx) ?? {}) as E
+    const extended = (extend?.(_ctx) ?? {}) as ReturnType<E>
 
-    const ctx = { ..._ctx, ...extended } as RulerContext<R, P, E>
+    const ctx = { ..._ctx, ...extended } as RulerContext<R, P, ReturnType<E>>
 
     function string(message?: RulerFactoryMessage, params?: P) {
       ctx.type = 'string'
