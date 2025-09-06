@@ -24,23 +24,23 @@ yarn add ruler-factory
 
 ### Varlet UI
 
-```vue
+```html
 <script setup lang="ts">
-import { ref } from 'vue'
-import { rulerFactory } from 'ruler-factory'
+  import { ref } from 'vue'
+  import { rulerFactory } from 'ruler-factory'
 
-const ruler = rulerFactory((validator) => {
-  return (value) => {
-    const e = validator(value)
+  const ruler = rulerFactory((validator) => {
+    return (value) => {
+      const e = validator(value)
 
-    return e ? e.message : true
-  }
-})
+      return e ? e.message : true
+    }
+  })
 
-const model = ref({
-  name: '',
-  email: '',
-})
+  const model = ref({
+    name: '',
+    email: '',
+  })
 </script>
 
 <template>
@@ -50,42 +50,73 @@ const model = ref({
       placeholder="Name"
       :rules="ruler().required('Required').min(2, 'Wrong length').done()"
     />
-    <var-input
-      v-model="model.age"
-      placeholder="Email"
-      :rules="ruler().email('Must be email format').done()"
-    />
+    <var-input v-model="model.age" placeholder="Email" :rules="ruler().email('Must be email format').done()" />
   </var-form>
+</template>
+```
+
+### Vant
+
+```html
+<script setup lang="ts">
+  import { ref } from 'vue'
+  import { rulerFactory } from 'ruler-factory'
+  import type { FieldRule } from 'vant'
+
+  const ruler = rulerFactory<FieldRule>((validator, params) => ({
+    validator(value) {
+      const e = validator(value)
+
+      return e ? e.message : true
+    },
+    trigger: ['onChange', 'onBlur', 'onSubmit'],
+    ...params,
+  }))
+
+  const model = ref({
+    name: '',
+    email: '',
+  })
+</script>
+
+<template>
+  <van-form>
+    <van-cell-group inset>
+      <van-field v-model="model.name" label="Name" placeholder="Name" :rules="ruler().required('Required').done()" />
+      <van-field
+        v-model="model.email"
+        label="Email"
+        placeholder="Email"
+        :rules="ruler().email('Must be email format').done()"
+      />
+    </van-cell-group>
+  </van-form>
 </template>
 ```
 
 ### Naive UI
 
-```vue
+```html
 <script setup lang="ts">
-import { ref } from 'vue'
-import { rulerFactory } from 'ruler-factory'
-import type { FormItemRule } from 'naive-ui'
+  import { ref } from 'vue'
+  import type { FormItemRule } from 'naive-ui'
+  import { rulerFactory } from 'ruler-factory'
 
-const ruler = rulerFactory<FormItemRule>((validator, params = {}) => ({
-  trigger: ['blur', 'change', 'input'],
-  validator: (_, value) => validator(value),
-  ...params,
-}))
+  const ruler = rulerFactory<FormItemRule>((validator, params = {}) => ({
+    trigger: ['blur', 'change', 'input'],
+    validator: (_, value) => validator(value),
+    ...params,
+  }))
 
-const model = ref({
-  name: '',
-  age: 20,
-})
+  const model = ref({
+    name: '',
+    age: 20,
+  })
 </script>
 
 <template>
   <n-form :model>
-    <n-form-item
-      path="name"
-      label="Name"
-      :rule="ruler().required('Required').min(2, 'Wrong length').done()"
-    >
+    <n-form-item path="name" label="Name" :rule="ruler().required('Required').min(2, 'Wrong length').done()">
       <n-input v-model:value="model.name" />
     </n-form-item>
     <n-form-item
@@ -101,42 +132,34 @@ const model = ref({
 
 ### Element Plus
 
-```vue
+```html
 <script setup lang="ts">
-import { ref } from 'vue'
-import { rulerFactory } from 'ruler-factory'
-import type { FormItemRule } from 'element-plus'
+  import { ref } from 'vue'
+  import type { FormItemRule } from 'element-plus'
+  import { rulerFactory } from 'ruler-factory'
 
-const ruler = rulerFactory<FormItemRule>((validator, params) => ({
-  validator(_, value, callback) {
-    const e = validator(value)
+  const ruler = rulerFactory<FormItemRule>((validator, params) => ({
+    validator(_, value, callback) {
+      const e = validator(value)
 
-    e ? callback(e) : callback()
-  },
-  trigger: ['blur', 'change', 'input'],
-  ...params,
-}))
+      e ? callback(e) : callback()
+    },
+    trigger: ['blur', 'change', 'input'],
+    ...params,
+  }))
 
-const model = ref({
-  name: '',
-  email: '',
-})
+  const model = ref({
+    name: '',
+    email: '',
+  })
 </script>
 
 <template>
   <el-form :model>
-    <el-form-item
-      prop="name"
-      label="Name"
-      :rules="ruler().required('Required').done()"
-    >
+    <el-form-item prop="name" label="Name" :rules="ruler().required('Required').done()">
       <el-input v-model="model.name" />
     </el-form-item>
-    <el-form-item
-      prop="email"
-      label="Email"
-      :rules="ruler().email('Must be email format').done()"
-    >
+    <el-form-item prop="email" label="Email" :rules="ruler().email('Must be email format').done()">
       <el-input v-model="model.email" />
     </el-form-item>
   </el-form>
