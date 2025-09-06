@@ -1,3 +1,9 @@
+## [0.0.3](https://github.com/varletjs/ruler-factory/compare/v0.0.2...v0.0.3) (2025-09-06)
+
+### Bug Fixes
+
+- rename section from "Custom Validation" to "Predicate Validation" in README ([bc50905](https://github.com/varletjs/ruler-factory/commit/bc5090575249c25496175c3648bb5c90a04a922b))
+
 ## [0.0.2](https://github.com/varletjs/ruler-factory/compare/v0.0.1...v0.0.2) (2025-09-06)
 
 ### Bug Fixes
