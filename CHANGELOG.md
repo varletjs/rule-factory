@@ -1,3 +1,9 @@
+## [0.0.9](https://github.com/varletjs/ruler-factory/compare/v0.0.8...v0.0.9) (2025-09-06)
+
+### Features
+
+- update rulerFactory function to improve type handling for extend parameter ([4039074](https://github.com/varletjs/ruler-factory/commit/4039074cc8f333cce3f10f2fb304f6450acadd34))
+
 ## [0.0.8](https://github.com/varletjs/ruler-factory/compare/v0.0.7...v0.0.8) (2025-09-06)
 
 ### Features
