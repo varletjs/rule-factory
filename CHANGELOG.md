@@ -1,3 +1,9 @@
+## [0.0.7](https://github.com/varletjs/ruler-factory/compare/v0.0.6...v0.0.7) (2025-09-06)
+
+### Features
+
+- update rulerFactory function signature to improve type handling ([30a0357](https://github.com/varletjs/ruler-factory/commit/30a03575ebdf5f4e1dbed6fb3114d5bf5381db5a))
+
 ## [0.0.6](https://github.com/varletjs/ruler-factory/compare/v0.0.5...v0.0.6) (2025-09-06)
 
 ### Features
