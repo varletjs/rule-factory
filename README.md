@@ -62,12 +62,12 @@ const model = ref({
     <var-input
       v-model="model.name"
       placeholder="Name"
-      :rules="ruler().required('Cannot be empty').min(2, 'Wrong length')"
+      :rules="ruler().required('Cannot be empty').min(2, 'Wrong length').done()"
     />
     <var-input
       v-model="model.age"
       placeholder="Email"
-      :rules="ruler().email('Must be email format')"
+      :rules="ruler().email('Must be email format').done()"
     />
   </var-form>
 </template>
@@ -97,14 +97,14 @@ const model = ref({
     <n-form-item
       path="name"
       label="Name"
-      :rule="ruler().required('Cannot be empty').min(2, 'Wrong length')"
+      :rule="ruler().required('Cannot be empty').min(2, 'Wrong length').done()"
     >
       <n-input v-model:value="model.name" />
     </n-form-item>
     <n-form-item
       path="age"
       label="Age"
-      :rule="ruler().number().required('Cannot be empty').min(0, 'Cannot be negative')"
+      :rule="ruler().number().required('Cannot be empty').min(0, 'Cannot be negative').done()"
     >
       <n-input-number v-model:value="model.age" />
     </n-form-item>
