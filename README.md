@@ -20,21 +20,6 @@ npm install ruler-factory
 yarn add ruler-factory
 ```
 
-## Basic Usage
-
-```ts
-import { rulerFactory } from 'ruler-factory'
-
-const ruler = rulerFactory()
-const rules = ruler().string('Must be a string').min(3, 'Too short').max(10, 'Too long').done()
-const value = 'abc'
-const errors = rules.map((rule) => rule(value)).filter((e) => e instanceof Error)
-
-if (errors) {
-  // handle errors
-}
-```
-
 ## Integration with UI frameworks
 
 ### Varlet UI
