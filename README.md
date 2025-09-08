@@ -171,7 +171,7 @@ Take `Naive UI` as an example
 
 ```ts
 import { FormItemRule } from 'naive-ui'
-import { rulerFactory, RulerFactoryMessage } from 'ruler-factory'
+import { RulerContext, rulerFactory, RulerFactoryMessage } from 'ruler-factory'
 
 interface RulerExtendedContext {
   ip(message: RulerFactoryMessage, params?: FormItemRule): RulerContext<FormItemRule, FormItemRule, this>
